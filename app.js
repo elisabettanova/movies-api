@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const passport = require("passport");
 const cors = require("cors");
 require("dotenv").config();
+const errorHandler = require("./middleware/errorHandler");
 connectDB();
 
 var indexRouter = require("./routes/index");
@@ -15,6 +16,21 @@ var catalogRouter = require("./routes/catalog");
 //var authRouter = require("./routes/auth");
 
 var app = express();
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://allwomen-movies-app.herokuapp.com/",
+      //"https://margaalmodovar.com"
+    ],
+  })
+);
+app.set("trust proxy", 1);
+app.use(require("./config/session"));
+app.use(passport.initialize());
+app.use(passport.session());
+require("./config/passport");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
